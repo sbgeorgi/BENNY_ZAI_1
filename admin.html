@@ -16,7 +16,7 @@
             <div class="section-inner">
                 <p class="section-kicker">Mangrove Villas · Copy editor</p>
                 <h1 class="section-title">Keep the words as easygoing as the island.</h1>
-                <p class="room-hero-copy">Edit the public-facing copy below and save it to the <strong>BennySiteCopy</strong> Pantry basket. Images and image paths remain fixed in the site.</p>
+                <p class="room-hero-copy">Edit the public-facing copy below and save it directly to Supabase. Images and image paths remain fixed in the site.</p>
                 <div class="button-row"><a class="btn btn-quiet" href="index.html">Back to the site</a></div>
             </div>
         </section>
@@ -29,12 +29,14 @@
                 </div>
                 <form id="copy-form" class="copy-form">
                     <div id="copy-groups"></div>
-                    <div class="editor-actions"><button class="btn btn-gold" type="submit">Save copy to Pantry</button><span class="editor-note">Changes apply on the next page load.</span></div>
+                    <div class="editor-actions"><button class="btn btn-gold" type="submit">Save copy to Supabase</button><span class="editor-note">Changes publish immediately after saving.</span></div>
                 </form>
             </div>
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
     <script src="js/copy.js"></script>
     <script>
         const groups = [
@@ -85,10 +87,9 @@
         }
 
         async function loadEditor() {
-            await window.MangroveCopy.flushPending();
             const copy = await window.MangroveCopy.load({ force: true });
             renderForm(copy);
-            status.textContent = `Loaded from ${window.MangroveCopy.basketName}`;
+            status.textContent = `Loaded from ${window.MangroveCopy.source()}.`;
         }
 
         form.addEventListener('submit', async event => {
@@ -98,10 +99,10 @@
             status.textContent = 'Saving…';
             saveButton.disabled = true;
             try {
-                const result = await window.MangroveCopy.save(copy);
-                status.textContent = result?.pantryQueued ? 'Saved locally. Pantry update queued to avoid rate limits.' : 'Saved to Pantry.';
+                await window.MangroveCopy.save(copy);
+                status.textContent = 'Saved to Supabase.';
             } catch (error) {
-                status.textContent = 'Could not save. Check your connection and try again.';
+                status.textContent = 'Could not save. Check your connection and Supabase policy.';
                 console.error(error);
             } finally {
                 saveButton.disabled = false;
@@ -109,7 +110,7 @@
         });
 
         loadEditor().catch(error => {
-            status.textContent = 'Loaded local copy. Pantry is unavailable right now.';
+            status.textContent = 'Loaded local copy. Supabase is unavailable right now.';
             renderForm(window.MangroveCopy.defaults);
             console.error(error);
         });

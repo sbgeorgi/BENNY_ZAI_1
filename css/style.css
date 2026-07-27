@@ -499,7 +499,7 @@ footer {
 .room-switcher-links a:focus-visible,
 .room-switcher-links a.active { border-color: var(--gold-light); background: var(--gold-light); color: var(--ink); }
 
-/* Pantry copy editor */
+/* Supabase copy editor */
 .editor-page { background: #edf1ed; }
 .editor-page main { min-height: 100vh; }
 .editor-hero { padding: 78px clamp(20px, 6vw, 88px) 48px; background: var(--paper); }
