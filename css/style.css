@@ -276,6 +276,10 @@ section { padding: clamp(76px, 10vw, 132px) clamp(20px, 6vw, 88px); }
 .teal-section .section-kicker { color: var(--gold-light); }
 .teal-section .section-title { color: #fff; }
 .teal-section .section-intro { color: rgba(255, 255, 255, 0.72); }
+.teal-section .inline-link { color: #f4d9a8; font-weight: 600; text-decoration-color: #f4d9a8; }
+.teal-section .inline-link:hover,
+.teal-section .inline-link:focus-visible { color: #fff; text-decoration-color: #fff; }
+.teal-section .quote { color: #fff1d2; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.16); }
 
 .about-grid,
 .split-section,
