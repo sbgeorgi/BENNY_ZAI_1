@@ -85,6 +85,7 @@
         }
 
         async function loadEditor() {
+            await window.MangroveCopy.flushPending();
             const copy = await window.MangroveCopy.load({ force: true });
             renderForm(copy);
             status.textContent = `Loaded from ${window.MangroveCopy.basketName}`;
@@ -97,8 +98,8 @@
             status.textContent = 'Saving…';
             saveButton.disabled = true;
             try {
-                await window.MangroveCopy.save(copy);
-                status.textContent = 'Saved to Pantry.';
+                const result = await window.MangroveCopy.save(copy);
+                status.textContent = result?.pantryQueued ? 'Saved locally. Pantry update queued to avoid rate limits.' : 'Saved to Pantry.';
             } catch (error) {
                 status.textContent = 'Could not save. Check your connection and try again.';
                 console.error(error);

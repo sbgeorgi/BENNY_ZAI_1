@@ -2,7 +2,10 @@ const MANGROVE_PANTRY_ID = 'e261b005-1617-4cd7-8f85-88cd2de27084';
 const MANGROVE_BASKET_NAME = 'BennySiteCopy';
 const MANGROVE_PANTRY_URL = `https://getpantry.cloud/apiv1/pantry/${MANGROVE_PANTRY_ID}/basket/${MANGROVE_BASKET_NAME}`;
 const MANGROVE_COPY_CACHE_KEY = 'mangrove-villas-copy-cache';
-const MANGROVE_COPY_CACHE_TTL = 60 * 1000;
+const MANGROVE_PANTRY_META_KEY = 'mangrove-villas-pantry-meta';
+const MANGROVE_COPY_CACHE_TTL = 5 * 60 * 1000;
+const MANGROVE_PANTRY_READ_COOLDOWN = 30 * 1000;
+const MANGROVE_PANTRY_WRITE_COOLDOWN = 30 * 1000;
 
 const MANGROVE_COPY_DEFAULTS = {
     hero_eyebrow: 'Gibson Bight · Roatán, Honduras',
@@ -129,6 +132,29 @@ const MANGROVE_COPY_DEFAULTS = {
 
 let mangroveCopyLoadRequest = null;
 let mangroveCopySaveRequest = null;
+let mangroveCopySaveTimer = null;
+let mangroveCopyPendingWrite = null;
+
+function readMangrovePantryMeta() {
+    try {
+        return JSON.parse(localStorage.getItem(MANGROVE_PANTRY_META_KEY) || '{}') || {};
+    } catch {
+        return {};
+    }
+}
+
+function writeMangrovePantryMeta(update) {
+    try {
+        localStorage.setItem(MANGROVE_PANTRY_META_KEY, JSON.stringify({ ...readMangrovePantryMeta(), ...update }));
+    } catch {
+        // Storage can be unavailable in private browsing; the in-memory guards still work.
+    }
+}
+
+function mangrovePantryCooldown(key, duration) {
+    const elapsed = Date.now() - Number(readMangrovePantryMeta()[key] || 0);
+    return Math.max(0, duration - elapsed);
+}
 
 function readMangroveCopyCache(ignoreAge = false) {
     try {
@@ -154,9 +180,13 @@ async function loadMangroveCopy({ force = false } = {}) {
         if (cached) return cached;
     }
     if (mangroveCopyLoadRequest) return mangroveCopyLoadRequest;
+    if (mangrovePantryCooldown('lastReadAt', MANGROVE_PANTRY_READ_COOLDOWN)) {
+        return readMangroveCopyCache(true) || { ...MANGROVE_COPY_DEFAULTS };
+    }
 
     mangroveCopyLoadRequest = (async () => {
         try {
+            writeMangrovePantryMeta({ lastReadAt: Date.now() });
             const response = await fetch(MANGROVE_PANTRY_URL, { cache: 'no-store' });
             if (!response.ok) throw new Error(`Pantry returned ${response.status}`);
             const pantryCopy = await response.json();
@@ -208,25 +238,60 @@ function applyMangroveCopy(copy) {
     });
 }
 
+async function sendMangroveCopyToPantry(nextCopy) {
+    writeMangrovePantryMeta({ lastWriteAt: Date.now() });
+    const response = await fetch(MANGROVE_PANTRY_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nextCopy)
+    });
+    if (!response.ok) throw new Error(`Pantry returned ${response.status}`);
+    writeMangroveCopyCache(nextCopy);
+    writeMangrovePantryMeta({ pendingCopy: null });
+    return { ...nextCopy, pantrySaved: true };
+}
+
+function queueMangroveCopySave(nextCopy, waitMs) {
+    mangroveCopyPendingWrite = nextCopy;
+    writeMangroveCopyCache(nextCopy);
+    writeMangrovePantryMeta({ pendingCopy: nextCopy });
+    if (!mangroveCopySaveTimer) {
+        mangroveCopySaveTimer = setTimeout(async () => {
+            mangroveCopySaveTimer = null;
+            const pending = mangroveCopyPendingWrite;
+            mangroveCopyPendingWrite = null;
+            if (!pending) return;
+            try {
+                await window.MangroveCopy.save(pending);
+            } catch (error) {
+                mangroveCopyPendingWrite = pending;
+                console.warn('Queued Pantry copy save failed; it will retry on the next admin save.', error);
+            }
+        }, waitMs + 50);
+    }
+    return { ...nextCopy, pantryQueued: true };
+}
+
+async function flushPendingMangroveCopy() {
+    const pending = mangroveCopyPendingWrite || readMangrovePantryMeta().pendingCopy;
+    if (!pending) return null;
+    mangroveCopyPendingWrite = pending;
+    return window.MangroveCopy.save(pending);
+}
+
 window.MangroveCopy = {
     basketName: MANGROVE_BASKET_NAME,
     defaults: MANGROVE_COPY_DEFAULTS,
     url: MANGROVE_PANTRY_URL,
     load: loadMangroveCopy,
     apply: applyMangroveCopy,
+    flushPending: flushPendingMangroveCopy,
     async save(copy) {
-        if (mangroveCopySaveRequest) return mangroveCopySaveRequest;
         const nextCopy = { ...MANGROVE_COPY_DEFAULTS, ...copy };
-        mangroveCopySaveRequest = (async () => {
-            const response = await fetch(MANGROVE_PANTRY_URL, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nextCopy)
-            });
-            if (!response.ok) throw new Error(`Pantry returned ${response.status}`);
-            writeMangroveCopyCache(nextCopy);
-            return response.json().catch(() => nextCopy);
-        })().finally(() => {
+        if (mangroveCopySaveRequest) return queueMangroveCopySave(nextCopy, MANGROVE_PANTRY_WRITE_COOLDOWN);
+        const waitMs = mangrovePantryCooldown('lastWriteAt', MANGROVE_PANTRY_WRITE_COOLDOWN);
+        if (waitMs) return queueMangroveCopySave(nextCopy, waitMs);
+        mangroveCopySaveRequest = sendMangroveCopyToPantry(nextCopy).finally(() => {
             mangroveCopySaveRequest = null;
         });
         return mangroveCopySaveRequest;
