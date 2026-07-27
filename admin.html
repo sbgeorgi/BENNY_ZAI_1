@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mangrove Villas copy editor.">
+    <title>Copy editor | Mangrove Villas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="room-page editor-page">
+    <main>
+        <section class="editor-hero">
+            <div class="section-inner">
+                <p class="section-kicker">Mangrove Villas · Copy editor</p>
+                <h1 class="section-title">Keep the words as easygoing as the island.</h1>
+                <p class="room-hero-copy">Edit the public-facing copy below and save it to the <strong>BennySiteCopy</strong> Pantry basket. Images and image paths remain fixed in the site.</p>
+                <div class="button-row"><a class="btn btn-quiet" href="index.html">Back to the site</a></div>
+            </div>
+        </section>
+
+        <section class="editor-section">
+            <div class="section-inner">
+                <div class="editor-toolbar">
+                    <div><p class="section-kicker">Copy only</p><h2 class="editor-title">Site language</h2></div>
+                    <p id="editor-status" class="editor-status" role="status">Loading current copy…</p>
+                </div>
+                <form id="copy-form" class="copy-form">
+                    <div id="copy-groups"></div>
+                    <div class="editor-actions"><button class="btn btn-gold" type="submit">Save copy to Pantry</button><span class="editor-note">Changes apply on the next page load.</span></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/copy.js"></script>
+    <script>
+        const groups = [
+            { title: 'Landing page', keys: ['hero_eyebrow', 'hero_title', 'hero_subtitle', 'hero_scroll', 'about_kicker', 'about_title', 'about_text', 'about_cta', 'about_secondary_cta', 'rooms_kicker', 'rooms_title', 'rates_note'] },
+            { title: 'Room cards', keys: ['room1_floor', 'room1_title', 'room1_description', 'room1_amenities', 'room1_price', 'room1_rate_suffix', 'room1_cta', 'room2_floor', 'room2_title', 'room2_description', 'room2_amenities', 'room2_price', 'room2_rate_suffix', 'room2_cta', 'room3_floor', 'room3_title', 'room3_description', 'room3_amenities', 'room3_price', 'room3_rate_suffix', 'room3_cta'] },
+            { title: 'Dive school and nearby', keys: ['dive_kicker', 'dive_title', 'dive_text', 'dive_quote', 'dive_cta', 'attractions_kicker', 'attractions_title', 'attraction_west_end', 'attraction_west_end_time', 'attraction_west_bay', 'attraction_west_bay_time', 'attraction_airport', 'attraction_airport_time', 'attraction_gumbalimba', 'attraction_gumbalimba_time', 'attraction_sandy_bay', 'attraction_sandy_bay_time'] },
+            { title: 'Contact and footer', keys: ['contact_kicker', 'contact_title', 'contact_address', 'contact_email', 'contact_whatsapp', 'contact_cta', 'footer_brand', 'footer_rights'] },
+            { title: 'Room 1 page', keys: ['room1_hero_kicker', 'room1_hero_description', 'room1_meta_1', 'room1_meta_2', 'room1_meta_3', 'room1_detail_kicker', 'room1_detail_title', 'room1_rate_kicker', 'room1_rate_note', 'room1_rate_cta', ...Array.from({ length: 10 }, (_, i) => `room1_amenity_${i + 1}`)] },
+            { title: 'Room 2 page', keys: ['room2_hero_kicker', 'room2_hero_description', 'room2_meta_1', 'room2_meta_2', 'room2_meta_3', 'room2_detail_kicker', 'room2_detail_title', 'room2_rate_kicker', 'room2_rate_note', 'room2_rate_cta', ...Array.from({ length: 11 }, (_, i) => `room2_amenity_${i + 1}`)] },
+            { title: 'Room 3 page', keys: ['room3_hero_kicker', 'room3_hero_description', 'room3_meta_1', 'room3_meta_2', 'room3_meta_3', 'room3_detail_kicker', 'room3_detail_title', 'room3_rate_kicker', 'room3_rate_note', 'room3_rate_cta', ...Array.from({ length: 11 }, (_, i) => `room3_amenity_${i + 1}`)] }
+        ];
+
+        const form = document.getElementById('copy-form');
+        const groupsTarget = document.getElementById('copy-groups');
+        const status = document.getElementById('editor-status');
+        const saveButton = form.querySelector('button[type="submit"]');
+
+        function labelFor(key) {
+            return key.replace(/^(room[123])_/, '$1 · ').replace(/_/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase());
+        }
+
+        function renderForm(copy) {
+            groupsTarget.replaceChildren();
+            groups.forEach(group => {
+                const fieldset = document.createElement('fieldset');
+                fieldset.className = 'copy-group';
+                const legend = document.createElement('legend');
+                legend.textContent = group.title;
+                const fields = document.createElement('div');
+                fields.className = 'copy-fields';
+                fieldset.append(legend, fields);
+                group.keys.forEach(key => {
+                    const label = document.createElement('label');
+                    label.className = 'copy-field';
+                    label.htmlFor = key;
+                    const caption = document.createElement('span');
+                    caption.textContent = labelFor(key);
+                    const control = copy[key] && copy[key].length > 90 ? document.createElement('textarea') : document.createElement('input');
+                    control.id = key;
+                    control.name = key;
+                    control.value = copy[key] || '';
+                    if (control.tagName === 'TEXTAREA') control.rows = 3;
+                    label.append(caption, control);
+                    fields.append(label);
+                });
+                groupsTarget.append(fieldset);
+            });
+        }
+
+        async function loadEditor() {
+            const copy = await window.MangroveCopy.load({ force: true });
+            renderForm(copy);
+            status.textContent = `Loaded from ${window.MangroveCopy.basketName}`;
+        }
+
+        form.addEventListener('submit', async event => {
+            event.preventDefault();
+            const copy = { ...window.MangroveCopy.defaults };
+            new FormData(form).forEach((value, key) => { copy[key] = value; });
+            status.textContent = 'Saving…';
+            saveButton.disabled = true;
+            try {
+                await window.MangroveCopy.save(copy);
+                status.textContent = 'Saved to Pantry.';
+            } catch (error) {
+                status.textContent = 'Could not save. Check your connection and try again.';
+                console.error(error);
+            } finally {
+                saveButton.disabled = false;
+            }
+        });
+
+        loadEditor().catch(error => {
+            status.textContent = 'Loaded local copy. Pantry is unavailable right now.';
+            renderForm(window.MangroveCopy.defaults);
+            console.error(error);
+        });
+    </script>
+</body>
+</html>

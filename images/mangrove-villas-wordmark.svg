@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" role="img" aria-labelledby="logo-title logo-description">
+  <title id="logo-title">Mangrove Villas</title>
+  <desc id="logo-description">A wide white Mangrove Villas wordmark with a stylized mangrove tree, canopy, and roots.</desc>
+  <rect width="900" height="240" rx="18" fill="#fff"/>
+  <rect x="2" y="2" width="896" height="236" rx="16" fill="none" stroke="#d9e3d9" stroke-width="3"/>
+
+  <g fill="none" stroke="#74550f" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 208C103 177 96 150 106 116C116 80 137 51 169 25" stroke-width="16"/>
+    <path d="M108 116C83 92 59 80 29 81M122 87C105 62 98 39 101 16M144 55C163 41 181 27 195 8M113 144C83 133 57 136 27 153" stroke-width="10"/>
+    <path d="M110 160C81 171 61 188 49 218M120 163C122 187 131 207 147 228M102 160C78 192 69 209 68 233M126 155C153 163 174 176 190 196" stroke-width="7"/>
+  </g>
+
+  <g fill="#8cc63e" stroke="#74550f" stroke-width="4">
+    <ellipse cx="29" cy="78" rx="23" ry="10" transform="rotate(25 29 78)"/>
+    <ellipse cx="98" cy="17" rx="24" ry="11" transform="rotate(-55 98 17)"/>
+    <ellipse cx="195" cy="9" rx="25" ry="11" transform="rotate(-42 195 9)"/>
+    <ellipse cx="167" cy="40" rx="23" ry="10" transform="rotate(15 167 40)"/>
+    <ellipse cx="138" cy="61" rx="22" ry="10" transform="rotate(-38 138 61)"/>
+    <ellipse cx="67" cy="133" rx="22" ry="10" transform="rotate(-16 67 133)"/>
+    <ellipse cx="52" cy="185" rx="20" ry="9" transform="rotate(-55 52 185)"/>
+  </g>
+
+  <text x="245" y="101" fill="#74550f" font-family="Georgia, Times New Roman, serif" font-size="76" font-weight="700" letter-spacing="1">MANGROVE</text>
+  <text x="252" y="169" fill="#7fbd3d" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="800" letter-spacing="8">VILLAS</text>
+  <path d="M254 185H829" stroke="#d7e2d4" stroke-width="3"/>
+  <text x="257" y="214" fill="#74550f" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" letter-spacing="3">GIBSON BIGHT, ROATAN HN.</text>
+</svg>
