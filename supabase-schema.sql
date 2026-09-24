@@ -126,7 +126,6 @@ values
           "dive_title": "Make the reef part of your stay",
           "dive_text": "Mangrove Villas is located beside the highly-rated Octopus Dive School. From first bubbles to advanced reef dives, our guests are perfectly placed to get in the water.",
           "dive_quote": "“Best dive experience of my life. The crew was professional and the reef is breathtaking.”",
-          "dive_cta": "Ask about dive packages",
           "attractions_kicker": "Close to everything",
           "attractions_title": "The island, at your pace",
           "attraction_west_end": "West End · famous dive destination",
