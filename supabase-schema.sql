@@ -101,6 +101,8 @@ values
           "rooms_kicker": "Choose your view",
           "rooms_title": "Three ways to stay",
           "rates_note": "Rates may vary seasonally. Electricity is additional for all rooms.",
+          "shared_laundry": "Free shared laundry",
+          "shared_drinking_water": "Drinking water provided",
           "room1_floor": "First floor · Mangrove view",
           "room1_title": "Queen Bed Studio",
           "room1_description": "A comfortable, self-contained studio with a private balcony and everything needed for an easy island stay.",
