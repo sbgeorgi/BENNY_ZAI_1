@@ -885,7 +885,35 @@ footer::before {
 }
 .footer-links a:hover,
 .footer-links a:focus-visible { color: var(--gold-light); }
-.footer-bottom { padding-top: 24px; border-top: 1px solid var(--line-light); color: rgba(255, 255, 255, 0.5); font-size: 0.7rem; letter-spacing: 0.08em; }
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-light);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+}
+.studio-credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color var(--motion-fast) ease, opacity var(--motion-fast) ease;
+}
+.studio-credit:hover,
+.studio-credit:focus-visible { color: #fff; }
+.studio-credit img { width: 138px; height: auto; }
 
 /* --------------------------------------------------------------------------
    Room detail pages
@@ -1383,13 +1411,18 @@ html:has(.image-lightbox[open]) { overflow: hidden; }
 }
 
 /* Room pages use the viewport for the plan, photos, rate and amenities. */
-.room-page { --header-h: 64px; --room-view-height: clamp(290px, calc(100dvh - 378px), 540px); }
+.room-page {
+    --header-h: 64px;
+    --room-footer-space: calc(48px + var(--panel-gap));
+    --room-view-height: clamp(290px, calc(100dvh - 442px), 540px);
+}
 .room-page .site-header { padding: 6px clamp(18px, 4vw, 56px); }
 .room-page .site-header-inner { max-width: 1480px; }
 .room-page .brand-logo,
 .room-page .site-header .brand-logo { width: 188px; height: 48px; transform: none; }
 .room-page .room-hero {
-    min-height: 100svh;
+    min-height: calc(100svh - var(--room-footer-space));
+    min-height: calc(100dvh - var(--room-footer-space));
     padding: calc(var(--header-h) + 8px) clamp(18px, 3vw, 46px) 12px;
     background: linear-gradient(180deg, var(--cream), var(--paper));
 }
@@ -1470,6 +1503,31 @@ html:has(.image-lightbox[open]) { overflow: hidden; }
     box-shadow: var(--shadow-sm);
 }
 .room-amenities .amenities-grid li { padding: 7px 0 7px 20px; font-size: .7rem; line-height: 1.35; }
+.room-page .room-footer {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 2px clamp(18px, 3vw, 46px);
+    border-radius: 12px;
+    text-align: left;
+}
+.room-footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    width: min(1480px, 100%);
+    margin: 0 auto;
+}
+.room-footer-location {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+.room-footer-location span { margin: 0 8px; color: var(--gold-light); }
 @media (max-width: 1120px) {
     .room-hero-top { grid-template-columns: minmax(0, 1fr) 255px 140px; gap: 14px; }
     .room-page .rx-levels { width: 140px; }
@@ -1479,7 +1537,7 @@ html:has(.image-lightbox[open]) { overflow: hidden; }
     .room-page .room-hero .section-title { font-size: clamp(2.8rem, 5.3vw, 4rem); }
 }
 @media (max-width: 850px) {
-    .room-page { --room-view-height: clamp(300px, calc(100dvh - 428px), 340px); }
+    .room-page { --room-view-height: clamp(270px, calc(100dvh - 492px), 340px); }
     .room-hero-top { grid-template-columns: minmax(0, 1fr) 140px; }
     .room-rate-card { grid-column: 1 / -1; grid-row: 2; }
     .room-page .room-rate-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px 14px; }
@@ -1506,4 +1564,6 @@ html:has(.image-lightbox[open]) { overflow: hidden; }
     .room-page .rx-photo-panel { height: 350px; }
     .room-page .rx-stage { max-height: 295px; }
     .room-amenities .amenities-grid { position: static; width: 100%; max-height: none; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 8px; }
+    .room-page .room-footer { padding: 12px 18px; }
+    .room-footer-inner { flex-wrap: wrap; }
 }
