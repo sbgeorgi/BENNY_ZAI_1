@@ -44,10 +44,6 @@ document.querySelectorAll('[data-year]').forEach(year => {
     year.textContent = new Date().getFullYear();
 });
 
-if (window.MangroveCopy) {
-    window.MangroveCopy.load().then(window.MangroveCopy.apply);
-}
-
 const galleryImages = [...document.querySelectorAll('.room-gallery .gallery-item img')];
 if (galleryImages.length) {
     const dialog = document.createElement('dialog');

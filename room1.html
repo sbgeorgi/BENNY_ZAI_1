@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=studio-footer">
+    <link rel="stylesheet" href="js/site-editor/site-editor.css?v=editor-2">
     <link rel="stylesheet" href="js/room-experience/room-experience.css?v=1">
 </head>
 <body class="main-site room-page">
@@ -32,35 +33,34 @@
     <main>
         <section class="room-hero"><div class="room-hero-shell"><div class="room-hero-top">
             <div class="room-hero-inner reveal">
-                <p class="section-kicker" data-copy="room1_hero_kicker">Room 01 · First floor</p>
-                <h1 class="section-title" data-copy="room1_title">Queen Bed Studio</h1>
-                <p class="room-hero-copy" data-copy="room1_hero_description">A calm, self-contained studio for couples or solo travelers, with a private balcony, mangrove views, and the comforts of home.</p>
-                <div class="room-meta"><span data-copy="room1_meta_1">Mangrove view</span><span data-copy="room1_meta_2">Private balcony</span><span data-copy="room1_meta_3">Kitchenette</span></div>
+                <p class="section-kicker" data-cms-copy="room1_hero_kicker">Room 01 · First floor</p>
+                <h1 class="section-title" data-cms-copy="room1_title">Queen Bed Studio</h1>
+                <p class="room-hero-copy" data-cms-copy="room1_hero_description">A calm, self-contained studio for couples or solo travelers, with a private balcony, mangrove views, and the comforts of home.</p>
+                <div class="room-meta"><span data-cms-copy="room1_meta_1">Mangrove view</span><span data-cms-copy="room1_meta_2">Private balcony</span><span data-cms-copy="room1_meta_3">Kitchenette</span></div>
             </div>
         <aside class="rate-panel room-rate-card">
-                    <p class="section-kicker" data-copy="room1_rate_kicker">Room 1 rate</p>
-                    <div class="rate-amount"><span data-copy="room1_price">$80</span> <small>/ night</small></div>
-                    <p data-copy="room1_rate_note">Price may vary seasonally. Electricity is additional. Email us to talk through dates, dive plans, and the best fit for your stay.</p>
-                    <a href="mailto:bennyabel@hotmail.com?subject=Room%201%20at%20Mangrove%20Villas" class="btn btn-gold" data-copy="room1_rate_cta">Email about Room 1</a>
+                    <p class="section-kicker" data-cms-copy="room1_rate_kicker">Room 1 rate</p>
+                    <div class="rate-amount"><span data-cms-copy="room1_price">$80</span> <small>/ night</small></div>
+                    <p data-cms-copy="room1_rate_note">Price may vary seasonally. Electricity is additional. Email us to talk through dates, dive plans, and the best fit for your stay.</p>
+                    <a href="mailto:bennyabel@hotmail.com?subject=Room%201%20at%20Mangrove%20Villas" data-cms-href="mailto:{email}?subject=Room%201%20at%20Mangrove%20Villas" class="btn btn-gold" data-cms-copy="room1_rate_cta">Email about Room 1</a>
                 </aside><div data-room-levels="room1"></div></div><div data-room-experience="room1"><figure class="rx-fallback"><img src="images/ROOM%201/1.jpeg" alt="Room 1 photo"></figure></div><details class="room-amenities"><summary><span>Room amenities</span><span class="room-amenities-action">View all</span></summary><ul class="amenities-grid">
-                        <li data-copy="room1_amenity_1">Queen bed</li><li data-copy="room1_amenity_2">Fully equipped kitchenette</li><li data-copy="room1_amenity_3">Air conditioning</li><li data-copy="room1_amenity_4">Private balcony</li><li data-copy="room1_amenity_5">TV</li><li data-copy="room1_amenity_6">Fans</li><li data-copy="room1_amenity_7">Parking</li><li data-copy="room1_amenity_8">Mangrove view</li><li data-copy="room1_amenity_9">Coffee</li><li data-copy="room1_amenity_10">Microwave</li><li data-copy="shared_laundry">Free shared laundry</li><li data-copy="shared_drinking_water">Drinking water provided</li>
+                        <li data-cms-copy="room1_amenity_1">Queen bed</li><li data-cms-copy="room1_amenity_2">Fully equipped kitchenette</li><li data-cms-copy="room1_amenity_3">Air conditioning</li><li data-cms-copy="room1_amenity_4">Private balcony</li><li data-cms-copy="room1_amenity_5">TV</li><li data-cms-copy="room1_amenity_6">Fans</li><li data-cms-copy="room1_amenity_7">Parking</li><li data-cms-copy="room1_amenity_8">Mangrove view</li><li data-cms-copy="room1_amenity_9">Coffee</li><li data-cms-copy="room1_amenity_10">Microwave</li><li data-cms-copy="shared_laundry">Free shared laundry</li><li data-cms-copy="shared_drinking_water">Drinking water provided</li>
                     </ul></details></div></section>
     </main>
-    <footer class="room-footer">
+    <footer class="room-footer" data-cms-section="Footer">
         <div class="room-footer-inner">
-            <p class="room-footer-location">Mangrove Villas <span aria-hidden="true">·</span> Gibson Bight, Roatán</p>
+            <p class="room-footer-location" data-cms-copy="room_footer_location">Mangrove Villas · Gibson Bight, Roatán</p>
             <a class="studio-credit" href="https://www.roatan.design/" target="_blank" rel="noopener noreferrer" aria-label="Website by Roatan.Design">
                 <span>Website by</span>
                 <img src="images/roatan-design-logo-light.svg" width="390" height="64" alt="Roatan.Design">
             </a>
         </div>
     </footer>
-    <a class="whatsapp-float" href="https://wa.me/13202679737?text=Hello%20Mangrove%20Villas%2C%20I%27d%20like%20to%20ask%20about%20staying%20with%20you." target="_blank" rel="noopener" aria-label="Chat with Mangrove Villas on WhatsApp">
+    <a class="whatsapp-float" href="https://wa.me/13202679737?text=Hello%20Mangrove%20Villas%2C%20I%27d%20like%20to%20ask%20about%20staying%20with%20you." data-cms-href="https://wa.me/{whatsapp}?text=Hello%20Mangrove%20Villas%2C%20I%27d%20like%20to%20ask%20about%20staying%20with%20you." target="_blank" rel="noopener" aria-label="Chat with Mangrove Villas on WhatsApp">
         <img src="images/whatsapp-logo-green.svg" alt="" aria-hidden="true">
     </a>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase.js"></script>
-    <script src="js/copy.js?v=shared-amenities"></script>
+    <script src="js/site-config.js?v=editor-2"></script>
+    <script src="js/site-editor/site-editor.js?v=editor-2"></script>
     <script src="js/main.js?v=gallery-mobile-fix"></script>
     <script defer src="js/room-experience/room-experience.js?v=1"></script>
 </body>

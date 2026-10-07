@@ -1,2 +1,4 @@
 .npm-cache/
 **/node_modules/
+.site-editor-credentials.txt
+.claude/
