@@ -7,9 +7,12 @@
     <title>Mangrove Villas | Gibson Bight, Roatán</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=studio-footer">
     <link rel="stylesheet" href="js/site-editor/site-editor.css?v=editor-2">
+    <link rel="stylesheet" href="css/premium-core.css?v=1">
+    <link rel="stylesheet" href="css/premium-home.css?v=1">
+    <link rel="stylesheet" href="css/premium-home-b.css?v=1">
 </head>
 <body class="main-site">
     <header class="site-header">
@@ -38,6 +41,7 @@
                 <p class="hero-subtitle" data-cms-copy="hero_subtitle">A quiet place to land between reef, rainforest, and the Caribbean sea.</p>
             </div>
             <a class="hero-scroll" href="#about" data-cms-copy="hero_scroll">Discover the villas</a>
+            <span class="hero-frame" aria-hidden="true"></span>
         </section>
 
         <section id="about" class="warm-section" data-cms-section="About">
@@ -116,10 +120,10 @@
 
         <section id="dive" class="teal-section" data-cms-section="Dive school">
             <div class="split-section reveal">
-                <div>
+                <div class="dive-media">
                     <img src="images/OCTOPUS.jpg" alt="Octopus Dive School next door to Mangrove Villas" loading="lazy" data-cms-media="images.dive" data-cms-label="Dive school photo">
                 </div>
-                <div>
+                <div class="dive-copy">
                     <p class="section-kicker" data-cms-copy="dive_kicker">Right next door</p>
                     <h2 class="section-title" data-cms-copy="dive_title">Make the reef part of your stay</h2>
                     <p class="section-intro" data-cms-copy="dive_text" data-cms-link-text="Octopus Dive School" data-cms-link-href="https://roatan-octopusdiveschool.com">Mangrove Villas is located beside the highly-rated <a class="inline-link" href="https://roatan-octopusdiveschool.com" target="_blank" rel="noopener">Octopus Dive School</a>. From first bubbles to advanced reef dives, our guests are perfectly placed to get in the water.</p>
@@ -133,13 +137,28 @@
                 <p class="section-kicker" data-cms-copy="attractions_kicker">Close to everything</p>
                 <h2 class="section-title centered" data-cms-copy="attractions_title">The island, at your pace</h2>
                 <ul class="attractions-list">
-                    <li><strong data-cms-copy="attraction_west_end">West End · famous dive destination</strong><span data-cms-copy="attraction_west_end_time">25 min walk · 5 min drive</span></li>
-                    <li><strong data-cms-copy="attraction_west_bay">West Bay Beach</strong><span data-cms-copy="attraction_west_bay_time">10 min drive</span></li>
-                    <li><strong data-cms-copy="attraction_airport">Roatán International Airport</strong><span data-cms-copy="attraction_airport_time">20 min drive</span></li>
-                    <li><strong data-cms-copy="attraction_gumbalimba">Gumbalimba Park</strong><span data-cms-copy="attraction_gumbalimba_time">15 min drive</span></li>
-                    <li><strong data-cms-copy="attraction_sandy_bay">Sandy Bay Marine Park</strong><span data-cms-copy="attraction_sandy_bay_time">5 min drive</span></li>
+                    <li class="reveal"><strong data-cms-copy="attraction_west_end">West End · famous dive destination</strong><span data-cms-copy="attraction_west_end_time">25 min walk · 5 min drive</span></li>
+                    <li class="reveal"><strong data-cms-copy="attraction_west_bay">West Bay Beach</strong><span data-cms-copy="attraction_west_bay_time">10 min drive</span></li>
+                    <li class="reveal"><strong data-cms-copy="attraction_airport">Roatán International Airport</strong><span data-cms-copy="attraction_airport_time">20 min drive</span></li>
+                    <li class="reveal"><strong data-cms-copy="attraction_gumbalimba">Gumbalimba Park</strong><span data-cms-copy="attraction_gumbalimba_time">15 min drive</span></li>
+                    <li class="reveal"><strong data-cms-copy="attraction_sandy_bay">Sandy Bay Marine Park</strong><span data-cms-copy="attraction_sandy_bay_time">5 min drive</span></li>
                 </ul>
             </div>
+            <script>
+                // Travel-time dots: scale each row's drive minutes against the farthest place (re-runs when the CMS rewrites copy).
+                (() => {
+                    const list = document.querySelector('#attractions .attractions-list');
+                    if (!list) return;
+                    const minutes = text => +((text.match(/(\d+)\s*min[^·\d]*drive/i) || text.match(/(\d+)\s*min/i) || [0, 0])[1]);
+                    const paint = () => {
+                        const rows = [...list.children].map(li => [li, minutes(li.querySelector('span')?.textContent || '')]);
+                        const max = Math.max(1, ...rows.map(row => row[1]));
+                        rows.forEach(([li, n]) => li.style.setProperty('--mv-pct', (n / max).toFixed(3)));
+                    };
+                    paint();
+                    new MutationObserver(paint).observe(list, { subtree: true, childList: true, characterData: true });
+                })();
+            </script>
         </section>
 
         <section id="contact" class="warm-section" data-cms-section="Contact">
@@ -148,9 +167,9 @@
                     <p class="section-kicker" data-cms-copy="contact_kicker">Start a conversation</p>
                     <h2 class="section-title" data-cms-copy="contact_title">Come find your corner of the island.</h2>
                     <ul class="contact-details">
-                        <li data-cms-copy="contact_address">Mangrove Villas · Gibson Bight Road, Roatán</li>
-                        <li><a href="mailto:bennyabel@hotmail.com" data-cms-href="mailto:{email}" data-cms-setting="email" data-cms-text>bennyabel@hotmail.com</a></li>
-                        <li><a href="https://wa.me/13202679737" target="_blank" rel="noopener" data-cms-href="https://wa.me/{whatsapp}" data-cms-setting="whatsapp" data-cms-label="WhatsApp number"><span data-cms-copy="contact_whatsapp">WhatsApp · +1 320-267-9737</span></a></li>
+                        <li class="contact-address" data-cms-copy="contact_address">Mangrove Villas · Gibson Bight Road, Roatán</li>
+                        <li class="contact-email"><a href="mailto:bennyabel@hotmail.com" data-cms-href="mailto:{email}" data-cms-setting="email" data-cms-text>bennyabel@hotmail.com</a></li>
+                        <li class="contact-whatsapp"><a href="https://wa.me/13202679737" target="_blank" rel="noopener" data-cms-href="https://wa.me/{whatsapp}" data-cms-setting="whatsapp" data-cms-label="WhatsApp number"><span data-cms-copy="contact_whatsapp">WhatsApp · +1 320-267-9737</span></a></li>
                     </ul>
                     <div class="button-row">
                         <a href="mailto:bennyabel@hotmail.com?subject=Stay%20at%20Mangrove%20Villas" data-cms-href="mailto:{email}?subject=Stay%20at%20Mangrove%20Villas" class="btn btn-gold" data-cms-copy="contact_cta">Email to plan your stay</a>
@@ -192,6 +211,6 @@
     </a>
     <script src="js/site-config.js?v=editor-2"></script>
     <script src="js/site-editor/site-editor.js?v=editor-2"></script>
-    <script src="js/main.js?v=gallery-mobile-fix"></script>
+    <script src="js/main.js?v=premium-1"></script>
 </body>
 </html>

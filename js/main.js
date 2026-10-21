@@ -2,26 +2,83 @@ const header = document.querySelector('.site-header');
 const menuButton = document.querySelector('.mobile-menu-button');
 const navLinks = document.querySelector('.nav-links');
 
+const waFloat = document.querySelector('.whatsapp-float');
+const pageFooter = document.querySelector('body > footer');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const canTuck = header && !document.body.classList.contains('room-page');
+let lastScrollY = window.scrollY;
+let footerInView = false;
+let scrollFrame = 0;
+
 function updateHeader() {
-    if (header) header.classList.toggle('scrolled', window.scrollY > 24);
+    scrollFrame = 0;
+    const y = window.scrollY;
+    // Read layout before any class/style writes.
+    const footerTop = footerInView ? pageFooter.getBoundingClientRect().top : Infinity;
+    if (header) {
+        header.classList.toggle('scrolled', y > 24);
+        // Home page: tuck the header while reading down, bring it back on any scroll up.
+        if (canTuck && Math.abs(y - lastScrollY) > 6) {
+            header.classList.toggle('is-tucked', y > lastScrollY && y > window.innerHeight * 0.6 && !reduceMotion.matches && !header.classList.contains('menu-open'));
+            lastScrollY = y;
+        }
+    }
+    // Dock the WhatsApp button on top of the footer so it never covers footer text.
+    if (waFloat) {
+        const lift = Math.max(0, window.innerHeight - footerTop);
+        waFloat.style.translate = lift ? `0 ${-lift}px` : '';
+    }
 }
 
-if (header) {
-    updateHeader();
-    window.addEventListener('scroll', updateHeader, { passive: true });
+function requestHeaderUpdate() {
+    if (!scrollFrame) scrollFrame = requestAnimationFrame(updateHeader);
+}
+
+updateHeader();
+window.addEventListener('scroll', requestHeaderUpdate, { passive: true });
+window.addEventListener('resize', requestHeaderUpdate, { passive: true });
+
+if (waFloat && pageFooter && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+        footerInView = entry.isIntersecting;
+        requestHeaderUpdate();
+    }).observe(pageFooter);
 }
 
 if (menuButton && header && navLinks) {
-    menuButton.addEventListener('click', () => {
-        const open = header.classList.toggle('menu-open');
+    const setMenu = open => {
+        header.classList.toggle('menu-open', open);
+        header.classList.remove('is-tucked');
         menuButton.setAttribute('aria-expanded', String(open));
-    });
+        menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    };
+
+    menuButton.addEventListener('click', () => setMenu(!header.classList.contains('menu-open')));
 
     navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            header.classList.remove('menu-open');
-            menuButton.setAttribute('aria-expanded', 'false');
+        link.addEventListener('click', () => setMenu(false));
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && header.classList.contains('menu-open')) {
+            setMenu(false);
+            menuButton.focus();
+        }
+    });
+}
+
+// Scroll-spy: mark the nav link whose section crosses the middle of the viewport.
+const spyLinks = navLinks ? [...navLinks.querySelectorAll('a[href^="#"]')] : [];
+if ('IntersectionObserver' in window && spyLinks.length) {
+    const spy = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            const link = spyLinks.find(item => item.hash === `#${entry.target.id}`);
+            if (link) link.classList.toggle('is-active', entry.isIntersecting);
         });
+    }, { rootMargin: '-45% 0px -54% 0px' });
+    spyLinks.forEach(link => {
+        const target = document.getElementById(link.hash.slice(1));
+        if (target) spy.observe(target);
     });
 }
 
@@ -34,7 +91,7 @@ if ('IntersectionObserver' in window && revealItems.length) {
                 revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     revealItems.forEach(item => revealObserver.observe(item));
 } else {
     revealItems.forEach(item => item.classList.add('is-visible'));
