@@ -28,6 +28,9 @@
     to { transform: scale(1.07) translate3d(-1.4%, -1%, 0); }
 }
 
+/* When the label wraps on a phone, split it evenly rather than orphan one word. */
+.hero .eyebrow { text-wrap: balance; }
+
 /* Passe-partout hairline, open at the centre for the scroll cue */
 .hero-frame {
     position: absolute;
